@@ -16,7 +16,7 @@ Abre el enlace anterior en cualquier navegador — móvil o escritorio — sin n
 2. Selecciona la casa comercial por su logo y el material
 3. Elige el médico solicitante y el número de colegiado
 4. Pulsa **Ver informe** para previsualizar
-5. Descarga el PDF o comparte por correo
+5. Descarga el PDF
 
 ## Tecnología
 
