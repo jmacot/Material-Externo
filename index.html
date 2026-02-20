@@ -37,15 +37,18 @@
 
     .material-bloque { background: #f8f9fb; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px; margin-bottom: 12px; }
     .logos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-    .logo-btn { border: 2px solid #e5e7eb; border-radius: 8px; background: white; padding: 8px 6px; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; min-height: 58px; width: 100%; }
+    @media (max-width: 480px) { .logos-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+    .logo-btn { border: 2px solid #e5e7eb; border-radius: 8px; background: white; padding: 10px 8px; cursor: pointer; transition: all 0.18s; display: flex; align-items: center; justify-content: center; min-height: 64px; width: 100%; }
+    @media (max-width: 480px) { .logo-btn { min-height: 72px; padding: 12px 8px; } }
     .logo-btn:hover { border-color: #1a3a5c; box-shadow: 0 2px 8px rgba(26,58,92,0.15); transform: translateY(-1px); }
     .logo-btn.active { border-color: #1a3a5c; background: #eef2f7; box-shadow: 0 0 0 3px rgba(26,58,92,0.12); }
     .logo-btn img { max-height: 36px; max-width: 90%; object-fit: contain; display: block; margin: 0 auto; }
+    @media (max-width: 480px) { .logo-btn img { max-height: 48px; } }
 
-    .mat-campos { display: flex; gap: 10px; align-items: flex-end; }
-    .mat-campos .form-group { margin: 0; }
-    .mat-campos .form-group:first-child { flex: 0 0 200px; }
-    .mat-campos .form-group:last-child { flex: 1; }
+    .mat-campos { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+    .mat-campos .form-group { margin: 0; flex: 1 1 140px; min-width: 0; }
+    .mat-campos .form-group:first-child { flex: 1 1 160px; }
+    .mat-campos .form-group:last-child { flex: 2 1 200px; }
 
     .mat-sugerencias { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
     .mat-chip { background: white; border: 1.5px solid #c3d0e0; color: #1a3a5c; border-radius: 20px; padding: 4px 13px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
@@ -108,19 +111,13 @@
       </div>
     </div>
     <div class="form-row">
-      <div class="form-group w-quarter">
-        <label>Edad</label>
-        <input type="number" id="edad" min="0" max="120" placeholder="" />
-      </div>
       <div class="form-group w-third">
         <label>Fecha de nacimiento</label>
-        <div style="display:flex;gap:4px;align-items:center;">
-          <input type="number" id="fecha_nac_d" min="1" max="31" placeholder="DD" style="width:56px;text-align:center;padding:9px 4px;" oninput="if(this.value.length>2)this.value=this.value.slice(0,2)" />
-          <span style="color:#aaa;font-weight:bold;">/</span>
-          <input type="number" id="fecha_nac_m" min="1" max="12" placeholder="MM" style="width:56px;text-align:center;padding:9px 4px;" oninput="if(this.value.length>2)this.value=this.value.slice(0,2)" />
-          <span style="color:#aaa;font-weight:bold;">/</span>
-          <input type="number" id="fecha_nac_y" min="1900" max="2099" placeholder="AAAA" style="width:76px;text-align:center;padding:9px 4px;" oninput="if(this.value.length>4)this.value=this.value.slice(0,4)" />
-        </div>
+        <input type="text" id="fecha_nac" inputmode="numeric" placeholder="DD/MM/AAAA" maxlength="10" autocomplete="off" style="letter-spacing:1px;" oninput="autoFecha(this)" />
+      </div>
+      <div class="form-group w-quarter">
+        <label>Edad</label>
+        <input type="number" id="edad" min="0" max="120" placeholder="" style="background:#f8f9fb;" readonly />
       </div>
       <div class="form-group w-quarter">
         <label>NHC</label>
@@ -213,7 +210,6 @@
     </div>
     <div class="preview-actions">
       <button class="btn-green" onclick="generarPDF()">⬇ Descargar PDF</button>
-      <button class="btn-blue" onclick="compartirPDF()">✉ Compartir por mail</button>
       <button class="btn-secondary" onclick="volverFormulario()">✏ Editar</button>
     </div>
   </div>
@@ -249,16 +245,47 @@ function addMaterial() {
 
   const header = document.createElement('div');
   header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;';
-  header.innerHTML = '<span style="font-size:12px;font-weight:700;color:#1a3a5c;text-transform:uppercase;letter-spacing:.5px;">Material ' + (id + 1) + '</span>';
+
+  const headerLeft = document.createElement('span');
+  headerLeft.style.cssText = 'font-size:12px;font-weight:700;color:#1a3a5c;text-transform:uppercase;letter-spacing:.5px;';
+  headerLeft.textContent = 'Material ' + (id + 1);
+  header.appendChild(headerLeft);
+
+  const headerRight = document.createElement('div');
+  headerRight.style.cssText = 'display:flex;gap:8px;align-items:center;';
+
+  // Botón limpiar (siempre visible, discreto)
+  const btnLimpiar = document.createElement('button');
+  btnLimpiar.type = 'button';
+  btnLimpiar.title = 'Limpiar campos';
+  btnLimpiar.style.cssText = 'background:none;border:none;cursor:pointer;color:#999;font-size:12px;padding:2px 6px;border-radius:4px;transition:color 0.2s;';
+  btnLimpiar.innerHTML = '&#x21BA; limpiar';
+  btnLimpiar.onmouseenter = () => btnLimpiar.style.color = '#1a3a5c';
+  btnLimpiar.onmouseleave = () => btnLimpiar.style.color = '#999';
+  btnLimpiar.onclick = () => {
+    // Limpiar logo seleccionado
+    bloque.querySelectorAll('.logo-btn').forEach(b => b.classList.remove('active'));
+    // Limpiar campos
+    const pInput = document.getElementById('prov-' + id);
+    const mInput = document.getElementById('mat-' + id);
+    if (pInput) pInput.value = '';
+    if (mInput) mInput.value = '';
+    // Limpiar sugerencias seleccionadas
+    const sugs = document.getElementById('sugs-' + id);
+    if (sugs) { sugs.querySelectorAll('.mat-chip').forEach(c => c.classList.remove('selected')); }
+  };
+  headerRight.appendChild(btnLimpiar);
+
   if (id > 0) {
     const btnX = document.createElement('button');
     btnX.type = 'button';
     btnX.className = 'btn-remove';
     btnX.innerHTML = '×';
-    btnX.title = 'Eliminar';
+    btnX.title = 'Eliminar bloque';
     btnX.onclick = () => bloque.remove();
-    header.appendChild(btnX);
+    headerRight.appendChild(btnX);
   }
+  header.appendChild(headerRight);
   bloque.appendChild(header);
 
   const grid = document.createElement('div');
@@ -415,7 +442,7 @@ function resetForm() {
   document.querySelectorAll('input[type="date"]').forEach(el => el.value = '');
   document.getElementById('fecha_solicitud').value = new Date().toISOString().split('T')[0];
   document.getElementById('firma_medico').value = '';
-  ['fecha_nac_d','fecha_nac_m','fecha_nac_y'].forEach(id => { const el=document.getElementById(id); if(el) el.value=''; });
+  const fnEl = document.getElementById('fecha_nac'); if(fnEl) fnEl.value = ''; document.getElementById('edad').value = '';
   sexoSeleccionado = '';
   document.getElementById('btn-hombre').classList.remove('active');
   document.getElementById('btn-mujer').classList.remove('active');
@@ -426,14 +453,40 @@ function resetForm() {
 }
 
 
+
+function autoFecha(input) {
+  let raw = input.value.replace(/\D/g, '');
+  if (raw.length > 8) raw = raw.slice(0, 8);
+  let formatted = '';
+  if (raw.length <= 2) {
+    formatted = raw;
+  } else if (raw.length <= 4) {
+    formatted = raw.slice(0,2) + '/' + raw.slice(2);
+  } else {
+    formatted = raw.slice(0,2) + '/' + raw.slice(2,4) + '/' + raw.slice(4);
+  }
+  input.value = formatted;
+  // Calcular edad al completar la fecha
+  if (raw.length === 8) {
+    const d = parseInt(raw.slice(0,2));
+    const m = parseInt(raw.slice(2,4)) - 1;
+    const y = parseInt(raw.slice(4,8));
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - y;
+    if (hoy.getMonth() < m || (hoy.getMonth() === m && hoy.getDate() < d)) edad--;
+    if (edad >= 0 && edad <= 120) {
+      document.getElementById('edad').value = edad;
+    } else {
+      document.getElementById('edad').value = '';
+    }
+  } else {
+    document.getElementById('edad').value = '';
+  }
+}
+
 function getFechaNac() {
-  const d = document.getElementById('fecha_nac_d').value;
-  const m = document.getElementById('fecha_nac_m').value;
-  const y = document.getElementById('fecha_nac_y').value;
-  if (!d && !m && !y) return '—';
-  const dd = d ? d.toString().padStart(2,'0') : '__';
-  const mm = m ? m.toString().padStart(2,'0') : '__';
-  return dd + '/' + mm + '/' + (y || '____');
+  const v = document.getElementById('fecha_nac').value.trim();
+  return v || '—';
 }
 
 async function generarPDF() {
@@ -442,32 +495,64 @@ async function generarPDF() {
     alert('Primero pulsa "Ver informe" para generar la vista previa.');
     return;
   }
+
+  // Crear contenedor temporal a tamaño fijo de escritorio (794px = A4 a 96dpi)
+  const wrapper = document.createElement('div');
+  wrapper.style.cssText = [
+    'position:fixed',
+    'left:-9999px',
+    'top:0',
+    'width:794px',
+    'background:#ffffff',
+    'padding:40px 48px',
+    'font-family:Arial,sans-serif',
+    'font-size:13px',
+    'color:#222',
+    'box-sizing:border-box',
+    'z-index:-1'
+  ].join(';');
+  wrapper.innerHTML = preview.innerHTML;
+  document.body.appendChild(wrapper);
+
+  // Forzar estilos del informe en el wrapper (heredados del .informe)
+  const styleClone = document.createElement('style');
+  styleClone.textContent = `
+    .inf-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; border-bottom:2px solid #1a3a5c; padding-bottom:14px; }
+    .inf-header img { max-height:70px; }
+    .inf-titulo { font-size:18px; font-weight:700; color:#1a3a5c; text-align:right; letter-spacing:1px; }
+    .inf-tabla { width:100%; border-collapse:collapse; margin-bottom:16px; }
+    .inf-tabla td { padding:5px 10px; border:1px solid #ccc; font-size:13px; }
+    .inf-tabla td strong { color:#1a3a5c; font-size:11px; display:block; text-transform:uppercase; }
+    .inf-body { margin-bottom:20px; line-height:1.7; }
+    .inf-prov { font-weight:700; color:#1a3a5c; margin-top:8px; }
+    .inf-mat { padding-left:16px; }
+    .inf-mat::before { content:"• "; color:#1a3a5c; }
+    .inf-firma { margin-top:32px; text-align:right; font-size:12px; line-height:1.8; border-top:1px solid #ccc; padding-top:12px; }
+    .inf-firma strong { font-size:13px; }
+  `;
+  wrapper.appendChild(styleClone);
+
   const { jsPDF } = window.jspdf;
-  const canvas = await html2canvas(preview, { scale: 2, useCORS: true, backgroundColor: '#ffffff' });
+  const canvas = await html2canvas(wrapper, {
+    scale: 2,
+    useCORS: true,
+    backgroundColor: '#ffffff',
+    width: 794,
+    windowWidth: 794
+  });
+  document.body.removeChild(wrapper);
+
   const imgData = canvas.toDataURL('image/png');
   const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
   const pdfW = pdf.internal.pageSize.getWidth();
   const pdfH = pdf.internal.pageSize.getHeight();
   const imgW = pdfW - 20;
   const imgH = (canvas.height * imgW) / canvas.width;
-  const yOffset = imgH > pdfH - 20 ? 10 : (pdfH - imgH) / 2;
   pdf.addImage(imgData, 'PNG', 10, 10, imgW, Math.min(imgH, pdfH - 20));
   const nombre = document.getElementById('nombre').value.trim() || 'informe';
   pdf.save('solicitud_material_' + nombre.replace(/\s+/g,'_').toLowerCase() + '.pdf');
 }
 
-function compartirPDF() {
-  const nombre  = document.getElementById('nombre').value.trim() || 'Paciente';
-  const fecha   = document.getElementById('fecha_solicitud').value || '';
-  const medico  = document.getElementById('firma_medico').value || '';
-  const asunto  = encodeURIComponent('Solicitud Material Externo - ' + nombre);
-  const cuerpo  = encodeURIComponent('Adjunto informe de solicitud de material externo para ' + nombre + ' (fecha: ' + formatDate(fecha) + '). Médico solicitante: ' + medico + '.');
-  const a = document.createElement('a');
-  a.href = 'mailto:?subject=' + asunto + '&body=' + cuerpo;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-}
 </script>
 </body>
 </html>
