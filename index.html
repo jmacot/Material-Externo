@@ -13,6 +13,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="Material Externo">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#1a3a5c">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
@@ -288,13 +290,11 @@ function addMaterial() {
     // Limpiar campos
     const pInput = document.getElementById('prov-' + id);
     const mInput = document.getElementById('mat-' + id);
-    const dInput = document.getElementById('matd-' + id);
     if (pInput) pInput.value = '';
     if (mInput) mInput.value = '';
-    if (dInput) dInput.value = '';
     // Limpiar sugerencias seleccionadas
     const sugs = document.getElementById('sugs-' + id);
-    if (sugs) { sugs.querySelectorAll('.mat-chip').forEach(c => c.classList.remove('selected')); }
+    if (sugs) { sugs.innerHTML = ''; }
   };
   headerRight.appendChild(btnLimpiar);
 
@@ -334,9 +334,8 @@ function addMaterial() {
       '<input type="text" id="prov-' + id + '" placeholder="Selecciona logo o escribe" />' +
     '</div>' +
     '<div class="form-group">' +
-      '<label>Material</label>' +
-      '<input type="text" id="mat-' + id + '" placeholder="Selecciona de la lista o escribe" />' +
-      '<input type="hidden" id="matd-' + id + '" />' +
+      '<label>Material (escribe si no aparece en la lista)</label>' +
+      '<input type="text" id="mat-' + id + '" placeholder="Escribe material adicional" />' +
     '</div>';
   bloque.appendChild(campos);
 
@@ -355,19 +354,13 @@ function selectProveedor(btn, grid, nombre, id) {
 
   const sugs = document.getElementById('sugs-' + id);
   sugs.innerHTML = '';
-  const matInput = document.getElementById('mat-' + id);
-  const matDesc  = document.getElementById('matd-' + id);
   (CATALOGO[nombre] || []).forEach(m => {
     const chip = document.createElement('span');
     chip.className = 'mat-chip';
     chip.textContent = typeof m === 'object' ? m.n : m;
+    chip.dataset.desc = typeof m === 'object' ? m.d : m;
     chip.addEventListener('click', () => {
-      const nombre_mat = typeof m === 'object' ? m.n : m;
-      const desc_mat   = typeof m === 'object' ? m.d : m;
-      matInput.value = nombre_mat;
-      if (matDesc) matDesc.value = desc_mat;
-      sugs.querySelectorAll('.mat-chip').forEach(c => c.classList.remove('selected'));
-      chip.classList.add('selected');
+      chip.classList.toggle('selected');
     });
     sugs.appendChild(chip);
   });
@@ -395,20 +388,46 @@ function generarInforme() {
   const firmaMedico  = document.getElementById('firma_medico').value;
   const firmaCnp     = document.getElementById('firma_cnp').value.trim();
 
-  if (!nombre) { alert('Introduce el nombre del paciente.'); return; }
+  // Validación mejorada
+  const errores = [];
+  if (!nombre) errores.push('- Nombre del paciente');
+  if (!patologia) errores.push('- Patología / Diagnóstico');
+  if (!firmaMedico) errores.push('- Médico solicitante');
+
+  // Validar que al menos un bloque tenga material
+  const bloques = document.querySelectorAll('.material-bloque');
+  let hayMaterial = false;
+  bloques.forEach(bl => {
+    const idNum = bl.id.replace('bloque-', '');
+    const prov = document.getElementById('prov-' + idNum).value.trim();
+    const mat  = document.getElementById('mat-' + idNum).value.trim();
+    const chips = bl.querySelectorAll('.mat-chip.selected');
+    if (prov && (mat || chips.length > 0)) hayMaterial = true;
+  });
+  if (!hayMaterial) errores.push('- Al menos un material (selecciona proveedor y material)');
+
+  if (errores.length > 0) {
+    alert('Faltan campos obligatorios:\n\n' + errores.join('\n'));
+    return;
+  }
+
   // Guardar médico y CNP para la próxima vez
   if (firmaMedico) localStorage.setItem('ultimo_medico', firmaMedico);
   if (firmaCnp)    localStorage.setItem('ultimo_cnp', firmaCnp);
 
-  const bloques = document.querySelectorAll('.material-bloque');
   const mats = [];
   bloques.forEach(bl => {
     const idNum = bl.id.replace('bloque-', '');
     const prov    = document.getElementById('prov-'  + idNum).value.trim().toUpperCase();
-    const mat     = document.getElementById('mat-'   + idNum).value.trim();
-    const matdEl  = document.getElementById('matd-'  + idNum);
-    const matDesc = matdEl && matdEl.value.trim() ? matdEl.value.trim() : mat.toUpperCase();
-    if (prov || mat) mats.push({ prov, mat: matDesc });
+    // Recoger chips seleccionados
+    const chips = bl.querySelectorAll('.mat-chip.selected');
+    chips.forEach(chip => {
+      const desc = chip.dataset.desc || chip.textContent.toUpperCase();
+      if (prov) mats.push({ prov, mat: desc });
+    });
+    // Recoger texto escrito manualmente
+    const matManual = document.getElementById('mat-' + idNum).value.trim();
+    if (prov && matManual) mats.push({ prov, mat: matManual.toUpperCase() });
   });
 
   const porProv = {};
