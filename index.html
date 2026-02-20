@@ -167,7 +167,7 @@
     <div class="form-row">
       <div class="form-group w-third">
         <label>Fecha de intervención</label>
-        <input type="date" id="fecha_intervencion" />
+        <input type="text" id="fecha_intervencion" inputmode="numeric" placeholder="DD/MM/AAAA" maxlength="10" autocomplete="off" style="letter-spacing:1px;" oninput="autoFechaSimple(this)" />
       </div>
     </div>
 
@@ -390,7 +390,7 @@ function generarInforme() {
   const nhc          = document.getElementById('nhc').value.trim();
   const patologia    = document.getElementById('patologia').value.trim();
   const intervencion = document.getElementById('intervencion').value.trim();
-  const fechaInt     = document.getElementById('fecha_intervencion').value;
+  const fechaInt     = document.getElementById('fecha_intervencion').value.trim();
   const fechaSol     = document.getElementById('fecha_solicitud').value;
   const firmaMedico  = document.getElementById('firma_medico').value;
   const firmaCnp     = document.getElementById('firma_cnp').value.trim();
@@ -451,11 +451,11 @@ function generarInforme() {
   let cuerpo = '';
   if (edad && patologia && intervencion) {
     cuerpo = 'Paciente de ' + edad + ' a&ntilde;os con <strong>' + patologia + '</strong>, solicito material para intervenci&oacute;n quir&uacute;rgica (<strong>' + intervencion + '</strong>)';
-    if (fechaInt) cuerpo += ' programada para el <strong>' + formatDate(fechaInt) + '</strong>';
+    if (fechaInt) cuerpo += ' programada para el <strong>' + fechaInt + '</strong>';
   } else if (patologia) {
     cuerpo = 'Diagn&oacute;stico: <strong>' + patologia + '</strong>';
     if (intervencion) cuerpo += '. Intervenci&oacute;n: <strong>' + intervencion + '</strong>';
-    if (fechaInt) cuerpo += ' programada para el <strong>' + formatDate(fechaInt) + '</strong>';
+    if (fechaInt) cuerpo += ' programada para el <strong>' + fechaInt + '</strong>';
   }
 
   let fechaFirma = '';
@@ -549,6 +549,20 @@ function autoFecha(input) {
 function getFechaNac() {
   const v = document.getElementById('fecha_nac').value.trim();
   return v || '—';
+}
+
+function autoFechaSimple(input) {
+  let raw = input.value.replace(/\D/g, '');
+  if (raw.length > 8) raw = raw.slice(0, 8);
+  let formatted = '';
+  if (raw.length <= 2) {
+    formatted = raw;
+  } else if (raw.length <= 4) {
+    formatted = raw.slice(0,2) + '/' + raw.slice(2);
+  } else {
+    formatted = raw.slice(0,2) + '/' + raw.slice(2,4) + '/' + raw.slice(4);
+  }
+  input.value = formatted;
 }
 
 async function generarPDF() {
