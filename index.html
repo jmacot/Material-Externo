@@ -124,7 +124,7 @@
     <div class="form-row">
       <div class="form-group full">
         <label>Nombre completo</label>
-        <input type="text" id="nombre" placeholder="Ej: García López, María" />
+        <input type="text" id="nombre" placeholder="" />
       </div>
     </div>
     <div class="form-row">
@@ -162,6 +162,12 @@
       <div class="form-group full">
         <label>Intervención quirúrgica</label>
         <input type="text" id="intervencion" placeholder="Ej: Osteotomía tibial valguizante" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group w-third">
+        <label>Fecha de intervención</label>
+        <input type="date" id="fecha_intervencion" />
       </div>
     </div>
 
@@ -382,8 +388,9 @@ function generarInforme() {
   const edad         = document.getElementById('edad').value.trim();
   const fechaNac     = getFechaNac ? getFechaNac() : '—';
   const nhc          = document.getElementById('nhc').value.trim();
-  const patologia    = document.getElementById('patologia').value.trim().toUpperCase();
+  const patologia    = document.getElementById('patologia').value.trim();
   const intervencion = document.getElementById('intervencion').value.trim();
+  const fechaInt     = document.getElementById('fecha_intervencion').value;
   const fechaSol     = document.getElementById('fecha_solicitud').value;
   const firmaMedico  = document.getElementById('firma_medico').value;
   const firmaCnp     = document.getElementById('firma_cnp').value.trim();
@@ -443,9 +450,12 @@ function generarInforme() {
 
   let cuerpo = '';
   if (edad && patologia && intervencion) {
-    cuerpo = 'Paciente de ' + edad + ' a&ntilde;os con <strong>' + patologia + '</strong>, solicito material para intervenci&oacute;n quir&uacute;rgica (' + intervencion + ') el ' + formatDate(fechaSol);
+    cuerpo = 'Paciente de ' + edad + ' a&ntilde;os con <strong>' + patologia + '</strong>, solicito material para intervenci&oacute;n quir&uacute;rgica (<strong>' + intervencion + '</strong>)';
+    if (fechaInt) cuerpo += ' programada para el <strong>' + formatDate(fechaInt) + '</strong>';
   } else if (patologia) {
     cuerpo = 'Diagn&oacute;stico: <strong>' + patologia + '</strong>';
+    if (intervencion) cuerpo += '. Intervenci&oacute;n: <strong>' + intervencion + '</strong>';
+    if (fechaInt) cuerpo += ' programada para el <strong>' + formatDate(fechaInt) + '</strong>';
   }
 
   let fechaFirma = '';
