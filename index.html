@@ -79,18 +79,24 @@
     #preview-section { display: none; }
     .preview-card { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); padding: 32px; margin-bottom: 20px; }
     .informe { font-family: Arial, sans-serif; font-size: 13px; color: #222; max-width: 700px; margin: 0 auto; }
-    .inf-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; border-bottom: 2px solid #1a3a5c; padding-bottom: 14px; }
-    .inf-header img { max-height: 70px; }
-    .inf-titulo { font-size: 18px; font-weight: 700; color: #1a3a5c; text-align: right; letter-spacing: 1px; }
-    .inf-tabla { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-    .inf-tabla td { padding: 5px 10px; border: 1px solid #ccc; font-size: 13px; }
-    .inf-tabla td strong { color: #1a3a5c; font-size: 11px; display: block; text-transform: uppercase; }
-    .inf-body { margin-bottom: 20px; line-height: 1.7; }
-    .inf-prov { font-weight: 700; color: #1a3a5c; margin-top: 8px; }
-    .inf-mat { padding-left: 16px; }
-    .inf-mat::before { content: "• "; color: #1a3a5c; }
-    .inf-firma { margin-top: 32px; text-align: right; font-size: 12px; line-height: 1.8; border-top: 1px solid #ccc; padding-top: 12px; }
-    .inf-firma strong { font-size: 13px; }
+    .inf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 3px solid #1a3a5c; padding-bottom: 16px; }
+    .inf-header img { max-height: 64px; }
+    .inf-titulo { font-size: 20px; font-weight: 700; color: #1a3a5c; text-align: right; letter-spacing: 2px; text-transform: uppercase; }
+    .inf-tabla { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+    .inf-tabla tr:first-child td { background: #1a3a5c; color: white; padding: 8px 12px; font-size: 14px; font-weight: 600; }
+    .inf-tabla tr:first-child td strong { color: #a8c4e0; font-size: 10px; display: block; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 400; }
+    .inf-tabla tr:not(:first-child) td { padding: 7px 12px; border: 1px solid #dde3ea; font-size: 13px; background: #f8fafc; }
+    .inf-tabla tr:not(:first-child) td strong { color: #1a3a5c; font-size: 10px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
+    .inf-body { margin-bottom: 24px; line-height: 1.8; font-size: 13px; padding: 14px 16px; background: #f8fafc; border-left: 4px solid #1a3a5c; border-radius: 0 6px 6px 0; }
+    .inf-mat-section { margin-top: 14px; }
+    .inf-prov { font-weight: 700; color: #1a3a5c; margin-top: 10px; margin-bottom: 4px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #dde3ea; padding-bottom: 3px; }
+    .inf-mat { padding: 3px 0 3px 16px; font-size: 13px; }
+    .inf-mat::before { content: "▸ "; color: #1a3a5c; }
+    .inf-firma { margin-top: 36px; text-align: right; border-top: 1px solid #dde3ea; padding-top: 16px; color: #444; }
+    .inf-firma strong { font-size: 14px; color: #1a3a5c; display: block; margin-bottom: 4px; }
+    .inf-firma .firma-esp { font-size: 12px; color: #666; font-style: italic; display: block; margin-bottom: 6px; }
+    .inf-firma .firma-cnp { font-size: 11px; color: #888; display: block; margin-bottom: 8px; letter-spacing: 0.3px; }
+    .inf-firma .firma-fecha { font-size: 12px; color: #444; display: block; padding-top: 8px; border-top: 1px dashed #e5e7eb; margin-top: 4px; }
 
     .preview-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
     .btn-green { background: #16a34a; color: white; border: none; border-radius: 8px; padding: 13px 32px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
@@ -236,6 +242,11 @@ window.addEventListener('DOMContentLoaded', () => {
   const hoy = new Date().toISOString().split('T')[0];
   document.getElementById('fecha_solicitud').value = hoy;
   addMaterial();
+  // Restaurar último médico y CNP
+  const lastMedico = localStorage.getItem('ultimo_medico');
+  const lastCnp    = localStorage.getItem('ultimo_cnp');
+  if (lastMedico) document.getElementById('firma_medico').value = lastMedico;
+  if (lastCnp)    document.getElementById('firma_cnp').value    = lastCnp;
 });
 
 function setSexo(s) {
@@ -378,6 +389,9 @@ function generarInforme() {
   const firmaCnp     = document.getElementById('firma_cnp').value.trim();
 
   if (!nombre) { alert('Introduce el nombre del paciente.'); return; }
+  // Guardar médico y CNP para la próxima vez
+  if (firmaMedico) localStorage.setItem('ultimo_medico', firmaMedico);
+  if (firmaCnp)    localStorage.setItem('ultimo_cnp', firmaCnp);
 
   const bloques = document.querySelectorAll('.material-bloque');
   const mats = [];
@@ -415,25 +429,26 @@ function generarInforme() {
   document.getElementById('informe-preview').innerHTML =
     '<div class="inf-header">' +
       '<img src="' + LOGO_INFORME + '" alt="Logo" />' +
-      '<div class="inf-titulo">INFORME M&Eacute;DICO</div>' +
+      '<div class="inf-titulo">Informe M&eacute;dico</div>' +
     '</div>' +
     '<table class="inf-tabla">' +
       '<tr><td colspan="3"><strong>Paciente</strong>' + nombre + '</td></tr>' +
       '<tr>' +
         '<td><strong>Edad</strong>' + (edad || '—') + ' a&ntilde;os</td>' +
-        '<td><strong>Fecha Nac.</strong>' + (fechaNac || '—') + '</td>' +
+        '<td><strong>Fecha de nacimiento</strong>' + (fechaNac || '—') + '</td>' +
         '<td><strong>Sexo</strong>' + (sexoSeleccionado || '—') + '</td>' +
       '</tr>' +
-      '<tr><td colspan="3"><strong>N&ordm; H&ordf; Cl&iacute;nica</strong>' + (nhc || '—') + '</td></tr>' +
+      '<tr><td colspan="3"><strong>N&ordm; Historia Cl&iacute;nica</strong>' + (nhc || '—') + '</td></tr>' +
     '</table>' +
-    '<div class="inf-body"><p>' + cuerpo + '</p>' +
-      (mats.length ? '<div style="margin-top:10px">' + matsHTML + '</div>' : '') +
+    '<div class="inf-body">' +
+      '<p>' + cuerpo + '</p>' +
+      (mats.length ? '<div class="inf-mat-section">' + matsHTML + '</div>' : '') +
     '</div>' +
     '<div class="inf-firma">' +
-      '<strong>' + (firmaMedico || '—') + '</strong><br>' +
-      'Cirugía Ortopédica y Traumatología<br>' +
-      (firmaCnp ? 'CNP ' + firmaCnp + '<br>' : '') +
-      fechaFirma +
+      '<strong>' + (firmaMedico || '—') + '</strong>' +
+      '<span class="firma-esp">Cirugía Ortopédica y Traumatología</span>' +
+      (firmaCnp ? '<span class="firma-cnp">CNP ' + firmaCnp + '</span>' : '') +
+      '<span class="firma-fecha">' + fechaFirma + '</span>' +
     '</div>';
 
   document.getElementById('preview-section').style.display = 'block';
@@ -526,18 +541,24 @@ async function generarPDF() {
   // Forzar estilos del informe en el wrapper (heredados del .informe)
   const styleClone = document.createElement('style');
   styleClone.textContent = `
-    .inf-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px; border-bottom:2px solid #1a3a5c; padding-bottom:14px; }
-    .inf-header img { max-height:70px; }
-    .inf-titulo { font-size:18px; font-weight:700; color:#1a3a5c; text-align:right; letter-spacing:1px; }
-    .inf-tabla { width:100%; border-collapse:collapse; margin-bottom:16px; }
-    .inf-tabla td { padding:5px 10px; border:1px solid #ccc; font-size:13px; }
-    .inf-tabla td strong { color:#1a3a5c; font-size:11px; display:block; text-transform:uppercase; }
-    .inf-body { margin-bottom:20px; line-height:1.7; }
-    .inf-prov { font-weight:700; color:#1a3a5c; margin-top:8px; }
-    .inf-mat { padding-left:16px; }
-    .inf-mat::before { content:"• "; color:#1a3a5c; }
-    .inf-firma { margin-top:32px; text-align:right; font-size:12px; line-height:1.8; border-top:1px solid #ccc; padding-top:12px; }
-    .inf-firma strong { font-size:13px; }
+    .inf-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:3px solid #1a3a5c; padding-bottom:16px; }
+    .inf-header img { max-height:64px; }
+    .inf-titulo { font-size:20px; font-weight:700; color:#1a3a5c; text-align:right; letter-spacing:2px; text-transform:uppercase; }
+    .inf-tabla { width:100%; border-collapse:collapse; margin-bottom:20px; }
+    .inf-tabla tr:first-child td { background:#1a3a5c; color:white; padding:8px 12px; font-size:14px; font-weight:600; }
+    .inf-tabla tr:first-child td strong { color:#a8c4e0; font-size:10px; display:block; text-transform:uppercase; letter-spacing:0.5px; font-weight:400; }
+    .inf-tabla tr:not(:first-child) td { padding:7px 12px; border:1px solid #dde3ea; font-size:13px; background:#f8fafc; }
+    .inf-tabla tr:not(:first-child) td strong { color:#1a3a5c; font-size:10px; display:block; text-transform:uppercase; letter-spacing:0.5px; }
+    .inf-body { margin-bottom:24px; line-height:1.8; font-size:13px; padding:14px 16px; background:#f8fafc; border-left:4px solid #1a3a5c; border-radius:0 6px 6px 0; }
+    .inf-mat-section { margin-top:14px; }
+    .inf-prov { font-weight:700; color:#1a3a5c; margin-top:10px; margin-bottom:4px; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid #dde3ea; padding-bottom:3px; }
+    .inf-mat { padding:3px 0 3px 16px; font-size:13px; }
+    .inf-mat::before { content:"▸ "; color:#1a3a5c; }
+    .inf-firma { margin-top:36px; text-align:right; border-top:1px solid #dde3ea; padding-top:16px; color:#444; }
+    .inf-firma strong { font-size:14px; color:#1a3a5c; display:block; margin-bottom:4px; }
+    .inf-firma .firma-esp { font-size:12px; color:#666; font-style:italic; display:block; margin-bottom:6px; }
+    .inf-firma .firma-cnp { font-size:11px; color:#888; display:block; margin-bottom:8px; letter-spacing:0.3px; }
+    .inf-firma .firma-fecha { font-size:12px; color:#444; display:block; padding-top:8px; border-top:1px dashed #e5e7eb; margin-top:4px; }
   `;
   wrapper.appendChild(styleClone);
 
