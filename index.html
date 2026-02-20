@@ -392,7 +392,7 @@ function generarInforme() {
 
   let cuerpo = '';
   if (edad && patologia && intervencion) {
-    cuerpo = 'Paciente de ' + edad + ' a&ntilde;os con <strong>' + patologia + '</strong>, solicito material para IQ (' + intervencion + ') el ' + formatDate(fechaSol);
+    cuerpo = 'Paciente de ' + edad + ' a&ntilde;os con <strong>' + patologia + '</strong>, solicito material para intervenci&oacute;n quir&uacute;rgica (' + intervencion + ') el ' + formatDate(fechaSol);
   } else if (patologia) {
     cuerpo = 'Diagn&oacute;stico: <strong>' + patologia + '</strong>';
   }
