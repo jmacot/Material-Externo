@@ -41,10 +41,6 @@ const CATALOGO = {
   ],
 
   "STRYKER": [
-    { "n": "Triathlon TS",        "d": "Triathlon TS" },
-    { "n": "Mako SmartRobotics",  "d": "Mako SmartRobotics" },
-    { "n": "Scorpio NRG",         "d": "Scorpio NRG" },
-    { "n": "Triathlon Tritanium", "d": "Triathlon Tritanium" }
   ],
 
   "SYNTHES": [
@@ -56,11 +52,7 @@ const CATALOGO = {
   ],
 
   "ZIMMER BIOMET": [
-    { "n": "NCB",                     "d": "NCB (PERIPROSTHETIC FEMUR PLATE SYSTEM)" },
-    { "n": "Persona Knee",            "d": "Persona Knee" },
-    { "n": "NexGen",                  "d": "NexGen" },
-    { "n": "Vanguard",                "d": "Vanguard" },
-    { "n": "Oxford Unicompartimental","d": "Oxford Unicompartimental" }
+    { "n": "NCB", "d": "NCB (PERIPROSTHETIC FEMUR PLATE SYSTEM)" }
   ]
 
 };
