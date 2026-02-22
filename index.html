@@ -107,7 +107,7 @@
     .preview-card { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); padding: 32px; margin-bottom: 20px; }
     .informe { font-family: Arial, sans-serif; font-size: 13px; color: #222; max-width: 700px; margin: 0 auto; }
     .inf-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; border-bottom: 3px solid #1a3a5c; padding-bottom: 16px; }
-    .inf-header img { max-height: 64px; }
+    .inf-header img { max-height: 96px; }
     .inf-titulo { font-size: 20px; font-weight: 700; color: #1a3a5c; text-align: right; letter-spacing: 2px; text-transform: uppercase; }
     .inf-tabla { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
     .inf-tabla tr:first-child td { background: #1a3a5c; color: white; padding: 8px 12px; font-size: 14px; font-weight: 600; }
@@ -609,7 +609,7 @@ async function generarPDF() {
   const styleClone = document.createElement('style');
   styleClone.textContent = `
     .inf-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; border-bottom:3px solid #1a3a5c; padding-bottom:16px; }
-    .inf-header img { max-height:64px; }
+    .inf-header img { max-height:96px; }
     .inf-titulo { font-size:20px; font-weight:700; color:#1a3a5c; text-align:right; letter-spacing:2px; text-transform:uppercase; }
     .inf-tabla { width:100%; border-collapse:collapse; margin-bottom:20px; }
     .inf-tabla tr:first-child td { background:#1a3a5c; color:white; padding:8px 12px; font-size:14px; font-weight:600; }
