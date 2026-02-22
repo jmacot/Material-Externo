@@ -3,7 +3,7 @@
 Formulario web de archivo unico para generar solicitudes de material quirurgico externo en Cirugia Ortopedica y Traumatologia. Seleccion visual de casa comercial, catalogo de materiales, generacion de PDF y envio por correo.
 
 ![HTML5](https://img.shields.io/badge/HTML5-single--file-E34F26?logo=html5&logoColor=white)
-![Proveedores](https://img.shields.io/badge/proveedores-8-1a3a5c)
+![Materiales](https://img.shields.io/badge/materiales-30+-1a3a5c)
 ![Sin dependencias](https://img.shields.io/badge/dependencias-ninguna-grey)
 
 ---
@@ -33,14 +33,14 @@ No requiere instalacion. Funciona en cualquier navegador, incluyendo movil y tab
 
 | Proveedor | Materiales |
 |-----------|-----------|
-| Arthrex | FiberStitch, FiberTape, FlipCutter III, Scorpion, SwiveLock |
-| MBA Surgical | Placa clavicula tipo gancho |
+| Arthrex | Centerline, FiberStitch, FiberTape, FlipCutter III, Scorpion, SpeedBridge, SwiveLock Anchors, ZoneNavigator |
+| MBA Surgical | Placa clavicula tipo gancho, ACS |
 | NewClip | Expert Wrist, Expert Knee, Alians Elbow, ActivMotion S |
-| Palex | Clipeo Retorno, Mini Tightrope, Boton cortical |
-| Smith & Nephew | Versafix, Peri-Loc, Trigen, Redapt |
-| Stryker | Variax, AxSOS |
-| Synthes | LCP, PFNA, Expert Tibial Nail, Expert Humeral Nail |
-| Zimmer Biomet | NCB Periprosthetic, Persona, Oxford |
+| Palex | Evolution, Pixie Knee, BPK-S |
+| Smith & Nephew | Trigen Humeral Nail, EVOS Small, EVOS Large |
+| Stryker | *(catalogo abierto)* |
+| DePuy Synthes | TFNA, RFN-Advanced, PHILOS, Placa VA-LCP 3.5, Placa Clavicular, RIA |
+| Zimmer Biomet | NCB, Vanguard 360 |
 
 ---
 
