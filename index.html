@@ -21,6 +21,23 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: Arial, sans-serif; background: #f0f2f5; min-height: 100vh; padding: 30px 20px; }
     .app-container { max-width: 860px; margin: 0 auto; }
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      color: #777;
+      text-decoration: none;
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1.5px solid #d1d5db;
+      background: white;
+      transition: border-color 0.2s, color 0.2s;
+      margin-bottom: 12px;
+    }
+    .back-home:hover { border-color: #1a3a5c; color: #1a3a5c; }
     h1.app-title { text-align: center; color: #1a3a5c; font-size: 22px; margin-bottom: 24px; }
 
     .form-card { background: white; border-radius: 10px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); padding: 32px; margin-bottom: 28px; }
@@ -116,6 +133,7 @@
 </head>
 <body>
 <div class="app-container">
+  <a class="back-home" href="https://jmacot.github.io/" title="Volver al inicio">← Inicio</a>
   <h1 class="app-title">📋 Solicitud de Material Externo</h1>
 
   <div class="form-card" id="form-section">
