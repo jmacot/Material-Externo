@@ -11,6 +11,7 @@
 const CATALOGO = {
 
   "ARTHREX": [
+    { "n": "CENTERLINE",        "d": "CENTERLINE (SISTEMA DE LIBERACIÓN ENDOSCÓPICA)" },
     { "n": "FIBERSTITCH",       "d": "FIBERSTITCH (ALL-INSIDE MENISCUS REPAIR)" },
     { "n": "FIBERTAPE",         "d": "FIBERTAPE (INTERNALBRACE)" },
     { "n": "FLIPCUTTER III",    "d": "FLIPCUTTER III (BROCA RETRÓGRADA)" },
