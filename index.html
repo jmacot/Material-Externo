@@ -88,7 +88,8 @@
 
     .mat-sugerencias { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
     .mat-chip { background: white; border: 1.5px solid #c3d0e0; color: #1a3a5c; border-radius: 20px; padding: 4px 13px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
-    .mat-chip:hover, .mat-chip.selected { background: #1a3a5c; color: white; border-color: #1a3a5c; }
+    .mat-chip.selected { background: #1a3a5c; color: white; border-color: #1a3a5c; }
+    @media (hover: hover) { .mat-chip:hover { background: #1a3a5c; color: white; border-color: #1a3a5c; } }
 
     .btn-remove { background: none; border: none; cursor: pointer; color: #dc2626; font-size: 22px; padding: 2px 8px; border-radius: 4px; opacity: 0.65; transition: opacity 0.2s; line-height: 1; }
     .btn-remove:hover { opacity: 1; }
