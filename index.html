@@ -363,27 +363,7 @@ function addMaterial() {
   const headerRight = document.createElement('div');
   headerRight.style.cssText = 'display:flex;gap:8px;align-items:center;';
 
-  // Botón limpiar (siempre visible, discreto)
-  const btnLimpiar = document.createElement('button');
-  btnLimpiar.type = 'button';
-  btnLimpiar.title = 'Limpiar campos';
-  btnLimpiar.style.cssText = 'background:none;border:none;cursor:pointer;color:#999;font-size:12px;padding:2px 6px;border-radius:4px;transition:color 0.2s;';
-  btnLimpiar.innerHTML = '&#x21BA; limpiar';
-  btnLimpiar.onmouseenter = () => btnLimpiar.style.color = '#1a3a5c';
-  btnLimpiar.onmouseleave = () => btnLimpiar.style.color = '#999';
-  btnLimpiar.onclick = () => {
-    // Limpiar logo seleccionado
-    bloque.querySelectorAll('.logo-btn').forEach(b => b.classList.remove('active'));
-    // Limpiar campos
-    const pInput = document.getElementById('prov-' + id);
-    const mInput = document.getElementById('mat-' + id);
-    if (pInput) pInput.value = '';
-    if (mInput) mInput.value = '';
-    // Limpiar sugerencias seleccionadas
-    const sugs = document.getElementById('sugs-' + id);
-    if (sugs) { sugs.innerHTML = ''; }
-  };
-  headerRight.appendChild(btnLimpiar);
+  // (btnLimpiar se añade al final del bloque, después de sugerencias)
 
   if (id > 0) {
     const btnX = document.createElement('button');
@@ -431,6 +411,25 @@ function addMaterial() {
   sugs.className = 'mat-sugerencias';
   sugs.id = 'sugs-' + id;
   bloque.appendChild(sugs);
+
+  // Botón limpiar — visible al final del bloque
+  const btnLimpiar = document.createElement('button');
+  btnLimpiar.type = 'button';
+  btnLimpiar.title = 'Limpiar campos de este material';
+  btnLimpiar.style.cssText = 'display:flex;align-items:center;gap:6px;margin-top:10px;margin-left:auto;background:transparent;color:var(--text-muted);border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:600;font-family:Inter,Arial,sans-serif;cursor:pointer;transition:all 0.2s;';
+  btnLimpiar.innerHTML = '🗑 Limpiar';
+  btnLimpiar.onmouseenter = () => { btnLimpiar.style.borderColor = 'var(--accent)'; btnLimpiar.style.color = 'var(--accent)'; };
+  btnLimpiar.onmouseleave = () => { btnLimpiar.style.borderColor = 'var(--border)'; btnLimpiar.style.color = 'var(--text-muted)'; };
+  btnLimpiar.onclick = () => {
+    bloque.querySelectorAll('.logo-btn').forEach(b => b.classList.remove('active'));
+    const pInput = document.getElementById('prov-' + id);
+    const mInput = document.getElementById('mat-' + id);
+    if (pInput) pInput.value = '';
+    if (mInput) mInput.value = '';
+    const sugsEl = document.getElementById('sugs-' + id);
+    if (sugsEl) sugsEl.innerHTML = '';
+  };
+  bloque.appendChild(btnLimpiar);
 
   container.appendChild(bloque);
 }
