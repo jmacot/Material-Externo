@@ -25,6 +25,7 @@ No requiere instalacion. Funciona en cualquier navegador, incluyendo movil y tab
 - **Vista previa del informe** antes de generar el PDF
 - **Generacion de PDF** con cabecera corporativa, datos del paciente, materiales solicitados y firma
 - **Bloques de material multiples**: permite solicitar material de varios proveedores a la vez
+- **Modo oscuro / modo claro**: deteccion automatica con toggle manual
 - **Responsive**: adaptado para uso en escritorio y movil
 
 ---
