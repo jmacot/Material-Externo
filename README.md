@@ -66,7 +66,7 @@ Material-Externo/
 ├── index.html        ← aplicacion principal
 ├── materiales.js     ← catalogo de materiales por proveedor
 ├── icon.png          ← icono de la app (+ variantes de tamano)
-├── LICENSE           ← MIT
+├── LICENSE           ← All Rights Reserved
 └── README.md         ← este archivo
 ```
 
@@ -84,4 +84,4 @@ Material-Externo/
 
 ## Licencia
 
-MIT — Uso interno hospitalario.
+All Rights Reserved — Uso interno hospitalario.
