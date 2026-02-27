@@ -8,7 +8,9 @@ Formulario web de archivo unico para generar solicitudes de material quirurgico 
 
 ---
 
-## Acceso directo
+## Acceso
+
+> Acceso protegido — requiere autenticacion previa desde el [portal principal](https://jmacot.github.io/).
 
 [Abrir formulario](https://jmacot.github.io/Material-Externo/)
 
