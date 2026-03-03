@@ -1,6 +1,6 @@
 # 🔩 Solicitud de Material Externo
 
-Formulario web de archivo unico para generar solicitudes de material quirurgico externo en Cirugia Ortopedica y Traumatologia. Seleccion visual de casa comercial, catalogo de materiales, generacion de PDF y envio por correo.
+Solicita material quirurgico externo en segundos. Elige la casa comercial, selecciona el material del catalogo y genera el documento listo para enviar.
 
 ![HTML5](https://img.shields.io/badge/HTML5-single--file-E34F26?logo=html5&logoColor=white)
 ![Materiales](https://img.shields.io/badge/materiales-30+-1a3a5c)
