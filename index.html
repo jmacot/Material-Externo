@@ -451,11 +451,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const hoy = new Date().toISOString().split('T')[0];
   document.getElementById('fecha_solicitud').value = hoy;
   addMaterial();
-  // Restaurar último médico y CNP
-  const lastMedico = localStorage.getItem('ultimo_medico');
-  const lastCnp    = localStorage.getItem('ultimo_cnp');
-  if (lastMedico) document.getElementById('firma_medico').value = lastMedico;
-  if (lastCnp)    document.getElementById('firma_cnp').value    = lastCnp;
 });
 
 function setSexo(s) {
@@ -619,9 +614,6 @@ function generarInforme() {
     return;
   }
 
-  // Guardar médico y CNP para la próxima vez
-  if (firmaMedico) localStorage.setItem('ultimo_medico', firmaMedico);
-  if (firmaCnp)    localStorage.setItem('ultimo_cnp', firmaCnp);
 
   const mats = [];
   bloques.forEach(bl => {
