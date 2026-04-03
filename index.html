@@ -196,10 +196,64 @@
     textarea { resize: vertical; min-height: 60px; }
     select { cursor: pointer; appearance: auto; }
 
-    .sexo-group { display: flex; gap: 10px; }
-    .sexo-btn { flex: 1; padding: 9px; border: 1.5px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); cursor: pointer; font-size: 14px; font-weight: 600; color: var(--text-muted); transition: all 0.2s; font-family: 'Inter', Arial, sans-serif; }
-    .sexo-btn:hover { border-color: var(--accent); color: var(--accent); }
-    .sexo-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    /* ── LAT-SWITCH (toggle sexo) ── */
+    .lat-switch {
+      --_switch-bg: var(--accent-light);
+      --_slider-bg: var(--accent);
+      --_slider-bg-on: var(--accent-hover);
+      --_padding: 3px;
+      width: fit-content;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      isolation: isolate;
+      border-radius: 999px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .lat-switch input { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+    .lat-switch > span {
+      display: grid; place-content: center;
+      padding: 12px 14px;
+      font-size: 12px; font-weight: 600; font-family: 'Inter', sans-serif;
+      color: var(--accent); white-space: nowrap;
+      transition: opacity 0.3s ease-in-out 0.15s;
+    }
+    .lat-switch::before, .lat-switch::after {
+      content: ""; position: absolute; border-radius: inherit;
+    }
+    .lat-switch::after { background: var(--_switch-bg); inset: 0; z-index: -2; }
+    .lat-switch::before {
+      background: var(--_slider-bg); z-index: -1;
+      inset: var(--_padding) 50% var(--_padding) var(--_padding);
+      transition: inset 0.5s cubic-bezier(0.47, 1.64, 0.41, 0.8), background-color 0.5s;
+      box-shadow: inset 0 1px 1px rgba(0,0,0,0.15), 0 1px rgba(255,255,255,0.2);
+    }
+    .lat-switch:has(input:checked)::before {
+      background: var(--_slider-bg-on);
+      inset: var(--_padding) var(--_padding) var(--_padding) 50%;
+    }
+    .lat-switch > span:last-of-type,
+    .lat-switch > input:checked + span:first-of-type { opacity: 0.5; }
+    .lat-switch > input:checked ~ span:last-of-type { opacity: 1; color: white; }
+    .lat-switch > span:first-of-type { opacity: 1; color: white; }
+    .lat-switch:has(input:checked) > span:first-of-type { opacity: 0.5; color: var(--accent); }
+    .lat-switch:has(input:not(:checked)):hover::before {
+      inset: var(--_padding) 45% var(--_padding) var(--_padding);
+    }
+    .lat-switch:has(input:checked):hover::before {
+      inset: var(--_padding) var(--_padding) var(--_padding) 45%;
+    }
+    .lat-switch:focus-within::after { inset: -2px; }
+    [data-theme="dark"] .lat-switch {
+      --_switch-bg: rgba(147,197,253,0.15);
+      --_slider-bg: var(--accent);
+      --_slider-bg-on: #60a5fa;
+    }
+    [data-theme="dark"] .lat-switch > span { color: var(--accent); }
+    [data-theme="dark"] .lat-switch > span:first-of-type { color: white; }
+    [data-theme="dark"] .lat-switch:has(input:checked) > span:first-of-type { color: var(--accent); }
+    [data-theme="dark"] .lat-switch:has(input:checked) > span:last-of-type { color: white; }
 
     .material-bloque { background: var(--surface2); border: 1px solid var(--border-light); border-radius: var(--radius-sm); padding: 16px; margin-bottom: 12px; }
     .logos-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
@@ -233,8 +287,20 @@
     .btn-primary { background: var(--accent); color: white; border: none; border-radius: var(--radius-sm); padding: 13px 32px; font-size: 15px; font-weight: 700; cursor: pointer; transition: all 0.2s; font-family: 'Inter', Arial, sans-serif; }
     .btn-primary:hover { background: var(--accent-hover); box-shadow: var(--shadow-hover); transform: translateY(-1px); }
     .btn-primary:active { transform: translateY(0); }
-    .btn-secondary { background: var(--surface); color: var(--text-muted); border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 13px 24px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Inter', Arial, sans-serif; }
-    .btn-secondary:hover { border-color: var(--text-light); color: var(--text); }
+    /* ── BIN-BUTTON (limpiar) ── */
+    .bin-button {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 48px; height: 48px; border-radius: 8px;
+      background-color: rgb(255, 95, 95); cursor: pointer;
+      border: 1.5px solid rgb(255, 201, 201); transition: all 0.3s;
+      flex-shrink: 0; padding: 0;
+    }
+    .bin-button .bin-top { width: 17px; transform-origin: right; transition: transform 0.3s; }
+    .bin-button .bin-bottom { width: 14px; }
+    .bin-button .bin-top, .bin-button .bin-bottom { stroke: white; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .bin-button:hover .bin-top { transform: rotate(45deg); }
+    .bin-button:hover { background-color: rgb(220, 38, 38); border-color: rgb(252, 165, 165); }
+    .bin-button:active { transform: scale(0.9); }
 
     #preview-section { display: none; }
     .preview-card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 32px; margin-bottom: 20px; }
@@ -372,10 +438,11 @@
     <div class="form-row">
       <div class="form-group" style="max-width:240px">
         <label>Sexo</label>
-        <div class="sexo-group">
-          <button class="sexo-btn" id="btn-hombre" onclick="setSexo('Hombre')">♂ Hombre</button>
-          <button class="sexo-btn" id="btn-mujer" onclick="setSexo('Mujer')">♀ Mujer</button>
-        </div>
+        <label class="lat-switch">
+          <input type="checkbox" id="sexo-toggle" onchange="updateSexo()">
+          <span>Hombre</span>
+          <span>Mujer</span>
+        </label>
       </div>
     </div>
 
@@ -452,7 +519,10 @@
 
   <div class="actions">
     <button class="btn-primary" onclick="generarInforme()">📄 Generar informe</button>
-    <button class="btn-secondary" onclick="resetForm()">↺ Limpiar</button>
+    <button onclick="resetForm()" class="bin-button" title="Limpiar">
+      <svg class="bin-top" viewBox="0 0 39 7"><line x1="5" y1="2" x2="33" y2="2"/><line x1="20" y1="0" x2="20" y2="2"/></svg>
+      <svg class="bin-bottom" viewBox="0 0 33 39"><path d="M2 2h29l-3 34H5z"/></svg>
+    </button>
   </div>
 
   <div id="preview-section">
@@ -552,10 +622,8 @@ window.addEventListener('DOMContentLoaded', () => {
   addMaterial();
 });
 
-function setSexo(s) {
-  sexoSeleccionado = s;
-  document.getElementById('btn-hombre').classList.toggle('active', s === 'Hombre');
-  document.getElementById('btn-mujer').classList.toggle('active', s === 'Mujer');
+function updateSexo() {
+  sexoSeleccionado = document.getElementById('sexo-toggle').checked ? 'Mujer' : 'Hombre';
 }
 
 function addMaterial() {
@@ -802,8 +870,7 @@ function resetForm() {
   document.getElementById('firma_medico').value = '';
   const fnEl = document.getElementById('fecha_nac'); if(fnEl) fnEl.value = ''; document.getElementById('edad').value = '';
   sexoSeleccionado = '';
-  document.getElementById('btn-hombre').classList.remove('active');
-  document.getElementById('btn-mujer').classList.remove('active');
+  document.getElementById('sexo-toggle').checked = false;
   document.getElementById('materiales-container').innerHTML = '';
   matCount = 0;
   addMaterial();
